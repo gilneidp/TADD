@@ -1,0 +1,60 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+		{% block head %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>MAD- Monitoring Attacks and Deffending</title>
+    <!-- Bootstrap -->
+    <link href="{% static "css/bootstrap.css" %}" rel="stylesheet">
+    <!--  <link rel="stylesheet" href="{% static "css/main.css" %}" > -->
+		{% endblock %}
+   </head>
+   <body>
+	<div class="container main-content">
+	<div class="row">
+	    <div class="col-md-12">
+	<!-- div id="navigation-menu" class="col-md-12">  -->
+	       <ul id="menu" class="nav navbar-nav navbar-right" role="navigation">
+               <li class="active"><a href="/poxstatus/"><img src="{% static "img/home.png" %}">Início </a></li>
+               </li>
+               <li class="">
+               <a href="/admin/"><img src="{% static "img/config.png" %}"> Config </a>
+               </li>
+               <li class="">
+               <a href="/about/"><img src="{% static "img/about.png" %}">Sobre</a>
+               </li>
+               </ul>
+			</div>
+		  </div>
+	<div class="row"> 
+    <!-- Navigation Menu -->
+	<div class="col-md-3"> <!-- menu 2 -->
+	      {% block leftmenu %}
+ 	      <ul class="nav nav-pills nav-stacked" role="leftmenu">
+      		 <li><a class="label label-success" href="/honeypotstatus/">Status Honeypot</a></li>
+       		 <li role="separator" class="divider"></li>
+      		 <li><a class="label label-info" href="/poxstatus/">Status Do POX</a><li>
+       		 <li role="separator" class="divider"></li>
+      		 <li><a class="label label-warning" href="/tempflows/">Fluxos Temporários</a><li>
+      	  	 <li role="separator" class="divider"></li>
+     		 <li><a class="label label-warning" href="/poxlogs/">Logs Do POX</a></li>
+       		 <li role="separator" class="divider"></li>
+		 <li><a class="label label-danger" href="/installedflows/">Fluxos Coletados</a></li>
+		<li><a class="label label-danger" href="/rules/">Regras Instaladas</a></li>
+	     </ul>
+		 {% endblock %}
+   	</div>
+	<div class="col-md-8"> 
+	{% block corpo %}
+	 
+	{% endblock %}
+    </div>		
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></scrip>
+</body>
+</html>

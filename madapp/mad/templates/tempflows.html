@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% load staticfiles %}
+{% block corpo %}
+<h2 class="page-header">Requisições no minuto atual</h2>
+    <div class="col-lg-12">
+        <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+            <tr>
+		<th>Porta do Switch</th>
+		<th>IP de Origem</th>
+		<th>IP de Destino</th>
+		<th>Porta de Destino</th>
+                <th>Num. Requesições</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for x in tempf %}
+            <tr>
+		<td> {{x.switchport}}</td>
+		<td> {{x.ip_src}}</td>
+		<td> {{x.ip_dst}}</td>
+		<td> {{x.dst_port}}</td>
+		<td> {{x.num_ports}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+{% endblock %}

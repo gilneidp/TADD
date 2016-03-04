@@ -1,0 +1,158 @@
+@media (min-width: 960px){
+  .container{
+    width: 960px;
+  }
+}
+body {
+  background-color: #cccccc;
+}
+
+footer {
+  margin: 10px 0 0 0;
+  padding: 10px 10px 10px 10px;
+  background-color: #999999;
+  text-align: center;
+}
+
+.paper{
+  padding-right: 25px;
+  padding-left: 10px;
+}
+
+.justify {text-align: justify;
+    font-size: 14px;
+}
+.rightpadded {margin-right: 20px}
+
+.left-nav {
+  background-color: #999999;
+}
+
+.nav {
+  background-color: #999999;
+}
+
+.list-group  {
+  font-weight: bold;
+  font-size: 14px;
+}
+.list-group > li {
+  font-weight: bold;
+  border-top: 1px solid #ffffff;
+  font-size: 14px;
+}
+
+.list-group ul {
+  margin-left: 5px;
+  border: none;
+  list-style: none;
+}
+
+.list-group ul li {
+  padding-left: 0px;
+  padding-right: 10px;
+}
+
+.list-group a {
+  padding-left: 10px;
+  margin: 0 0 0 0 !important; 
+  color: #ffffff;
+  text-shadow: none !important;
+}
+
+.list-group a:hover {
+  color: #407794;
+}
+
+.main-content {
+  background-color: #e7e8e9;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.blog-siderbar{
+  padding: 14px;
+}
+
+.section-header {
+  color: #0f395e;
+  background-color: #ffffff;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.adjust-border1{
+  padding-left: 0px;
+  padding-right:5px;
+}
+
+.text-adjust {
+  margin-left: 15px;
+}
+
+.text-adjust2 {
+  margin-left: 9px;
+}
+
+
+.profile-pic {
+  float: center;
+  margin-right: 0px;
+  max-width: 160px;
+  border-radius:50%;
+}
+
+.paper-title {
+  font-weight: bold;
+  color: #0f395e;
+}
+
+.paper-authors {
+}
+
+.paper-publisher {
+  font-style: italic;
+}
+
+.paper-location {
+}
+
+.widget {
+  background-color: #FFFFFF;
+}
+
+.head-image {
+  max-width: 100%;
+  min-width: 300px;
+  height: auto;
+}
+.image-icon {
+  float: center;
+  margin-right: 0px;
+  max-width: 50px;
+  border-radius:50%;
+}
+.edu-background {
+ background-color: #ffffff;
+}
+.image-com {
+  float: center;
+  margin-right: 0px;
+  max-width: 140px;
+  padding: 10px 10px 10px 10px;
+}
+.form-padding{
+  padding-top: 20px;
+}
+#wrapper .text {
+position:relative;
+bottom:30px;
+left:0px;
+visibility:hidden;
+}
+
+#wrapper:hover .text {
+visibility:visible;
+}

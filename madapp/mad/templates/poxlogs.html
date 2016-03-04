@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+{% load staticfiles %}
+{% block corpo %}
+<h2 class="page-header">Logs do Controlador POX</h2>
+    <div class="col-lg-12">
+          <form role="form">
+            <div class="form-group">
+              <label for="Logs">Logs:</label>
+              <textarea class="form-control" rows="5" id="Logs">{{data}}</textarea>
+            </div>
+          </form>
+   </div>
+{% endblock %}
+

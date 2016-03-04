@@ -1,0 +1,209 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
+#
+# Also note: You'll have to insert the output of 'django-admin sqlcustom [app_label]'
+# into your database.
+from __future__ import unicode_literals
+
+from django.db import models
+
+
+class RuleTable(models.Model):
+    rule_id = models.AutoField(db_column='Rule.id', primary_key=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    switchport = models.CharField(db_column='SwitchPort', max_length=45)  # Field name made lowercase.
+    mac_src = models.CharField(db_column='MAC_src', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    mac_dst = models.CharField(db_column='MAC_dst', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    ip_src = models.CharField(db_column='IP_src', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    ip_dst = models.CharField(db_column='IP_dst', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    s_port = models.CharField(db_column='S_port', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    d_port = models.CharField(db_column='D_port', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    flow_table_flow_id = models.IntegerField(db_column='Flow_table_Flow.id')  # Field name made lowercase. Field renamed to remove unsuitable characters.
+
+    class Meta:
+        managed = False
+        db_table = 'Rule_table'
+
+
+class StatsTable(models.Model):
+    stats_id = models.AutoField(db_column='Stats.id', primary_key=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    packet_counter = models.FloatField(db_column='Packet_counter', blank=True, null=True)  # Field name made lowercase.
+    byte_counter = models.FloatField(db_column='Byte_counter', blank=True, null=True)  # Field name made lowercase.
+    flow_table_flow_id = models.IntegerField(db_column='Flow_table_Flow.id')  # Field name made lowercase. Field renamed to remove unsuitable characters.
+
+    class Meta:
+        managed = False
+        db_table = 'Stats_table'
+
+
+class Switchs(models.Model):
+    id_switch = models.AutoField(primary_key=True)
+    name_switch = models.CharField(max_length=45)
+
+    class Meta:
+        managed = False
+        db_table = 'Switchs'
+
+
+class SwitchsHasTemporaryFlows(models.Model):
+    switchs_id_switch = models.ForeignKey(Switchs, db_column='Switchs_id_switch')  # Field name made lowercase.
+    temporary_flows_id_temporaryflow = models.ForeignKey('TemporaryFlows', db_column='Temporary_Flows_id_temporaryFlow')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Switchs_has_Temporary_Flows'
+        unique_together = (('Switchs_id_switch', 'Temporary_Flows_id_temporaryFlow'),)
+
+
+class TemporaryFlows(models.Model):
+    id_temporaryflow = models.AutoField(db_column='id_temporaryFlow', primary_key=True)  # Field name made lowercase.
+    switchport = models.IntegerField(db_column='switchPort', blank=True, null=True)  # Field name made lowercase.
+    mac_src = models.CharField(max_length=45, blank=True, null=True)
+    mac_dst = models.CharField(max_length=45, blank=True, null=True)
+    ip_src = models.CharField(max_length=45, blank=True, null=True)
+    ip_dst = models.CharField(max_length=45, blank=True, null=True)
+    src_port = models.IntegerField(blank=True, null=True)
+    dst_port = models.IntegerField(blank=True, null=True)
+    action = models.CharField(max_length=45, blank=True, null=True)
+    timeout_time = models.TimeField(blank=True, null=True)
+    timestamp = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'Temporary_Flows'
+
+
+class TemporaryFlowsHasStatsTable(models.Model):
+    temporary_flows_id_temporaryflow = models.ForeignKey(TemporaryFlows, db_column='Temporary_Flows_id_temporaryFlow')  # Field name made lowercase.
+    stats_table_stats_id = models.ForeignKey(StatsTable, db_column='Stats_table_Stats.id')  # Field name made lowercase. Field renamed to remove unsuitable characters.
+
+    class Meta:
+        managed = False
+        db_table = 'Temporary_Flows_has_Stats_table'
+        unique_together = (('Temporary_Flows_id_temporaryFlow', 'Stats_table_Stats.id'),)
+
+
+class UsageTable(models.Model):
+    srv_id = models.AutoField(db_column='Srv.id', primary_key=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    servername = models.CharField(db_column='Servername', max_length=45)  # Field name made lowercase.
+    cpu_usage = models.FloatField(db_column='Cpu_usage', blank=True, null=True)  # Field name made lowercase.
+    input_traffic = models.FloatField(db_column='Input_traffic', blank=True, null=True)  # Field name made lowercase.
+    output_traffic = models.FloatField(db_column='Output_traffic', blank=True, null=True)  # Field name made lowercase.
+    timestamp = models.CharField(db_column='Timestamp', max_length=45)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Usage_table'
+
+
+class AuthGroup(models.Model):
+    name = models.CharField(unique=True, max_length=80)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group'
+
+
+class AuthGroupPermissions(models.Model):
+    group = models.ForeignKey(AuthGroup)
+    permission = models.ForeignKey('AuthPermission')
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group_permissions'
+        unique_together = (('group_id', 'permission_id'),)
+
+
+class AuthPermission(models.Model):
+    name = models.CharField(max_length=255)
+    content_type = models.ForeignKey('DjangoContentType')
+    codename = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_permission'
+        unique_together = (('content_type_id', 'codename'),)
+
+
+class AuthUser(models.Model):
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.IntegerField()
+    username = models.CharField(unique=True, max_length=30)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.CharField(max_length=254)
+    is_staff = models.IntegerField()
+    is_active = models.IntegerField()
+    date_joined = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user'
+
+
+class AuthUserGroups(models.Model):
+    user = models.ForeignKey(AuthUser)
+    group = models.ForeignKey(AuthGroup)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_groups'
+        unique_together = (('user_id', 'group_id'),)
+
+
+class AuthUserUserPermissions(models.Model):
+    user = models.ForeignKey(AuthUser)
+    permission = models.ForeignKey(AuthPermission)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_user_permissions'
+        unique_together = (('user_id', 'permission_id'),)
+
+
+class DjangoAdminLog(models.Model):
+    action_time = models.DateTimeField()
+    object_id = models.TextField(blank=True, null=True)
+    object_repr = models.CharField(max_length=200)
+    action_flag = models.SmallIntegerField()
+    change_message = models.TextField()
+    content_type = models.ForeignKey('DjangoContentType', blank=True, null=True)
+    user = models.ForeignKey(AuthUser)
+
+    class Meta:
+        managed = False
+        db_table = 'django_admin_log'
+
+
+class DjangoContentType(models.Model):
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'django_content_type'
+        unique_together = (('app_label', 'model'),)
+
+
+class DjangoMigrations(models.Model):
+    app = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    applied = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_migrations'
+
+
+class DjangoSession(models.Model):
+    session_key = models.CharField(primary_key=True, max_length=40)
+    session_data = models.TextField()
+    expire_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_session'
