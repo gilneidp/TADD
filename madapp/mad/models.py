@@ -67,15 +67,15 @@ class TemporaryFlows(models.Model):
   # id_switch = models.ForeignKey(Switches, db_column='id_switch')
     id_switch=  models.ForeignKey('Switches', db_column='id_switch')
     switchport = models.IntegerField(db_column='switchPort', blank=True, null=True)  # Field name made lowercase.
-    mac_src = models.CharField(max_length=45, blank=True, null=True)
-    mac_dst = models.CharField(max_length=45, blank=True, null=True)
+#    mac_src = models.CharField(max_length=45, blank=True, null=True)
+#    mac_dst = models.CharField(max_length=45, blank=True, null=True)
     ip_src = models.CharField(max_length=45, blank=True, null=True)
     ip_dst = models.CharField(max_length=45, blank=True, null=True)
     src_port = models.IntegerField(blank=True, null=True)
     dst_port = models.IntegerField(blank=True, null=True)
-    action = models.CharField(max_length=45, blank=True, null=True)
-    timeout_time = models.TimeField(blank=True, null=True)
-    timestamp = models.DateTimeField()
+#    action = models.CharField(max_length=45, blank=True, null=True)
+#    timeout_time = models.TimeField(blank=True, null=True)
+#    timestamp = models.DateTimeField()
 
     class Meta:
         managed = False

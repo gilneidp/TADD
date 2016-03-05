@@ -24,21 +24,6 @@ For each switch:
 4) When you see an IP packet, if you know the destination port (because it's
    in the table from step 1), install a flow for it.
 """
-#### AQUI COMECA A INTEGRACAO COM DJANGO####
-
-import os
-import sys
-import datetime
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "madapp.settings")
-from django.core.management import execute_from_command_line
-
-from django.utils import timezone
-from django.db.models import Count
-from array import *
-from django.db.models import F
-from madapp import settings
-from madapp.mad.models import *
-
 
 from pox.core import core
 import pox
@@ -46,12 +31,10 @@ log = core.getLogger()
 
 from pox.lib.packet.ethernet import ethernet, ETHER_BROADCAST
 from pox.lib.packet.ipv4 import ipv4
-from pox.lib.packet.tcp import tcp #importa caracteristicas do TCP GILNEI
 from pox.lib.packet.arp import arp
 from pox.lib.addresses import IPAddr, EthAddr
 from pox.lib.util import str_to_bool, dpid_to_str
 from pox.lib.recoco import Timer
-
 
 import pox.openflow.libopenflow_01 as of
 
@@ -187,18 +170,6 @@ class l3_switch (EventMixin):
     if packet.type == ethernet.LLDP_TYPE:
       # Ignore LLDP packets
       return
-
-    ## -- gilnei - Cap Flows
-    if isinstance(packet.next.next,tcp):
-      sport = packet.next.next.srcport
-      dport = packet.next.next.dstport
-      log.info ("AQUI DPID %i src_port %i dst_port %i" , dpid, sport, dport)
-      switches = Switches.objects.get(name_switch = dpid)
-      fl = TemporaryFlows(id_switch = switches, switchport = inport, ip_src = packet.next.srcip, ip_dst = packet.next.dstip, src_port = sport, dst_port = dport)
-      fl.save()
-
-
-
 
     if isinstance(packet.next, ipv4):
       log.debug("%i %i IP %s => %s", dpid,inport,
