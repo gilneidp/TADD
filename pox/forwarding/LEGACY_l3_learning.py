@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-A stupid L3 switch
+import os
+import sys
+import datetime
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "madapp.settings")
+from django.core.management import execute_from_command_line
 
-For each switch:
-1) Keep a table that maps IP addresses to MAC addresses and switch ports.
-   Stock this table using information from ARP and IP packets.
-2) When you see an ARP query, try to answer it using information in the table
-   from step 1.  If the info in the table is old, just flood the query.
-3) Flood all other ARPs.
-4) When you see an IP packet, if you know the destination port (because it's
-   in the table from step 1), install a flow for it.
-"""
+from django.utils import timezone
+from django.db.models import Count
+from array import *
+from django.db.models import F
+from madapp import settings
+from madapp.mad.models import *
 
 from pox.core import core
 import pox
@@ -31,6 +31,7 @@ log = core.getLogger()
 
 from pox.lib.packet.ethernet import ethernet, ETHER_BROADCAST
 from pox.lib.packet.ipv4 import ipv4
+from pox.lib.packet.tcp import tcp
 from pox.lib.packet.arp import arp
 from pox.lib.addresses import IPAddr, EthAddr
 from pox.lib.util import str_to_bool, dpid_to_str
@@ -41,12 +42,14 @@ import pox.openflow.libopenflow_01 as of
 from pox.lib.revent import *
 
 import time
+from datetime import timedelta
+
 
 # Timeout for flows
-FLOW_IDLE_TIMEOUT = 10
+FLOW_IDLE_TIMEOUT = 1
 
 # Timeout for ARP entries
-ARP_TIMEOUT = 60 * 2
+ARP_TIMEOUT = 2 * 2
 
 # Maximum number of packet to buffer on a switch for an unknown IP
 MAX_BUFFERED_PER_IP = 5
@@ -56,13 +59,7 @@ MAX_BUFFER_TIME = 5
 
 
 class Entry (object):
-  """
-  Not strictly an ARP entry.
-  We use the port to determine which port to forward traffic out of.
-  We use the MAC to answer ARP replies.
-  We use the timeout so that if an entry is older than ARP_TIMEOUT, we
-   flood the ARP request rather than try to answer it ourselves.
-  """
+  
   def __init__ (self, port, mac):
     self.timeout = time.time() + ARP_TIMEOUT
     self.port = port
@@ -125,6 +122,7 @@ class l3_switch (EventMixin):
           v.remove(item)
           po = of.ofp_packet_out(buffer_id = buffer_id, in_port = in_port)
           core.openflow.sendToDPID(dpid, po)
+	  print dpid, po
       if len(v) == 0: empty.append(k)
 
     # Remove empty buffer bins
@@ -132,21 +130,17 @@ class l3_switch (EventMixin):
       del self.lost_buffers[k]
 
   def _send_lost_buffers (self, dpid, ipaddr, macaddr, port):
-    """
-    We may have "lost" buffers -- packets we got but didn't know
-    where to send at the time.  We may know now.  Try and see.
-    """
     if (dpid,ipaddr) in self.lost_buffers:
-      # Yup!
       bucket = self.lost_buffers[(dpid,ipaddr)]
       del self.lost_buffers[(dpid,ipaddr)]
-      log.debug("Sending %i buffered packets to %s from %s"
-                % (len(bucket),ipaddr,dpid_to_str(dpid)))
+      log.info("Sending %i buffered packets to %s from %s and port %s"
+                % (len(bucket),ipaddr,dpid_to_str(dpid), port))
       for _,buffer_id,in_port in bucket:
         po = of.ofp_packet_out(buffer_id=buffer_id,in_port=in_port)
         po.actions.append(of.ofp_action_dl_addr.set_dst(macaddr))
         po.actions.append(of.ofp_action_output(port = port))
         core.openflow.sendToDPID(dpid, po)
+	print po
 
   def _handle_GoingUpEvent (self, event):
     self.listenTo(core.openflow)
@@ -156,8 +150,9 @@ class l3_switch (EventMixin):
     dpid = event.connection.dpid
     inport = event.port
     packet = event.parsed
+    #know = packet.next.next.srcport
     if not packet.parsed:
-      log.warning("%i %i ignoring unparsed packet", dpid, inport)
+      log.info("%i %i ignoring unparsed packet", dpid, inport, packet)
       return
 
     if dpid not in self.arpTable:
@@ -170,35 +165,96 @@ class l3_switch (EventMixin):
     if packet.type == ethernet.LLDP_TYPE:
       # Ignore LLDP packets
       return
-
-    if isinstance(packet.next, ipv4):
-      log.debug("%i %i IP %s => %s", dpid,inport,
+    ## -- gilnei - Cap Flows
+    if isinstance(packet.next.next,tcp):
+      sport = packet.next.next.srcport
+      dport = packet.next.next.dstport
+      attack = 3
+      prttype = 6
+      counter1 = 0
+      log.info ("AQUI DPID %i src_port %i dst_port %i" , dpid, sport, dport)
+      switches = Switches.objects.get(name_switch = dpid)
+      fl = TemporaryFlows(id_switch = switches, switchport = inport, ip_src = packet.next.srcip, ip_dst = packet.next.dstip, src_port = sport, dst_port = dport, timestamp = datetime.datetime.now())
+      fl.save()
+    # Verificar se e ataque 
+      timeisnow=datetime.datetime.now() - timedelta(minutes=1)
+      temps = TemporaryFlows.objects.values ('switchport','ip_src','ip_dst', 'dst_port').filter(timestamp__gte=timeisnow, dst_port__lte='10024').annotate(num_ports=Count('dst_port'))
+      tempd = TemporaryFlows.objects.values ('switchport','ip_src','ip_dst', 'src_port').filter(timestamp__gte=timeisnow).annotate(num_ports=Count('src_port'))
+      for flow in temps:
+        counter1 = flow['num_ports']
+      for flow in tempd:
+        counter2 = flow['num_ports']
+      portctr = TemporaryFlows.objects.values('switchport','ip_src','ip_dst').filter(timestamp__gte=timeisnow,
+      					      dst_port__lte='10024').annotate(port_counter=Count('dst_port', distinct=True))
+      for ct in portctr:
+      	ctr = ct['port_counter']
+      for flow in temps:
+        counter1 = flow['num_ports']
+      if (ctr > 10): 
+      	attack = 1
+	rt = RuleTable(id_switch=switches, switchport = 
+		        inport, ip_src = packet.next.srcip,
+		 	ip_dst = packet.next.dstip, src_port = sport,
+		 	dst_port = dport, timestamp = datetime.datetime.now(), 
+		        idle_timeout=3000, hard_timeout=20000,
+		        action= 0) # porta 0 n existe = DROP
+	rt.save()
+      elif (counter1 > 120 and counter1 < 240): 
+     	attack = 1
+        rt = RuleTable(id_switch=switches, switchport = inport, 
+        		ip_src = packet.next.srcip,
+		        ip_dst = packet.next.dstip, 
+		        src_port = sport, dst_port = dport,
+		        timestamp = datetime.datetime.now(),
+		        idle_timeout=3000, hard_timeout=20000, 
+		        action= "DST_TO_HNP")
+        rt.save()
+      elif (counter1 > 240):
+      	attack = 1
+	rt = RuleTable(id_switch=switches, switchport = 
+	                inport, ip_src = packet.next.srcip,
+		 	ip_dst = packet.next.dstip, src_port = sport,
+		 	dst_port = dport, timestamp = datetime.datetime.now(), 
+		        idle_timeout=3000, hard_timeout=20000,
+		        action= 0)
+		 
+        rt.save()
+      else:
+        attack = 0
+       #else:
+      if isinstance(packet.next, ipv4):
+      		log.debug("%i %i IP %s => %s", dpid,inport,
                 packet.next.srcip,packet.next.dstip)
-
       # Send any waiting packets...
       self._send_lost_buffers(dpid, packet.next.srcip, packet.src, inport)
 
       # Learn or update port/MAC info
       if packet.next.srcip in self.arpTable[dpid]:
         if self.arpTable[dpid][packet.next.srcip] != (inport, packet.src):
-          log.info("%i %i RE-learned %s", dpid,inport,packet.next.srcip)
+          log.debug("%i %i RE-learned %s", dpid,inport,packet.next.srcip)
       else:
         log.debug("%i %i learned %s", dpid,inport,str(packet.next.srcip))
       self.arpTable[dpid][packet.next.srcip] = Entry(inport, packet.src)
-
+      
       # Try to forward
       dstaddr = packet.next.dstip
+      srcaddr = packet.next.srcip
+
       if dstaddr in self.arpTable[dpid]:
         # We have info about what port to send it out on...
-
-        prt = self.arpTable[dpid][dstaddr].port
+	prt = self.arpTable[dpid][dstaddr].port
         mac = self.arpTable[dpid][dstaddr].mac
+        self.arpTable[dpid][packet.next.srcip] = Entry(inport, packet.src)
+
         if prt == inport:
-          log.warning("%i %i not sending packet for %s back out of the " +
-                      "input port" % (dpid, inport, str(dstaddr)))
-        else:
-          log.debug("%i %i installing flow for %s => %s out port %i"
-                    % (dpid, inport, packet.next.srcip, dstaddr, prt))
+	    log.debug("notsending")
+
+        #  log.debug("%i %i not sending packet for %s back out of the " + 
+                 #  "input port" % (dpid, inport, str(dstaddr)))
+       #else:
+        if (attack == 0):
+          log.debug("%i %i installing flow for %s thisto %i  => %s out port %i"
+                    % (dpid, inport, packet.next.srcip, packet.next.tos, dstaddr, prt))
 
           actions = []
           actions.append(of.ofp_action_dl_addr.set_dst(mac))
@@ -214,6 +270,34 @@ class l3_switch (EventMixin):
                                 match=of.ofp_match.from_packet(packet,
                                                                inport))
           event.connection.send(msg.pack())
+
+        if (attack == 1):
+        # tmf = datetime.datetime.now() - timedelta(minutes= 2)
+        # rules = RuleTable.objects.filter(timestamp__gte=tmf)
+	# print ("Variaveis Filter %s %s %s %s"%(switches.__dict__,inport,packet.next.srcip,packet.next.dstip))
+         rules = RuleTable.objects.all().filter(switchport = inport,ip_src = packet.next.srcip,ip_dst = packet.next.dstip, src_port = packet.next.next.srcport)
+         #rules = RuleTable.objects.all().filter(id_switch=switches,switchPort=inport,ip_src=packet.next.srcip,ip_dst=packet.next.dstip)
+        # rules = RuleTable.objects.all()
+
+         for rule in rules:
+
+            msg = of.ofp_flow_mod()
+	    msg.match.dl_type = 0x800
+            msg.match.nw_proto = prttype
+            msg.match.nw_src = str(rule.ip_src)
+            msg.match.nw_dst = str(rule.ip_dst)
+            msg.priority = 65535 
+       #     msg.match.tp_dst = int(rule.dst_port)
+        #   msg.match.in_port = rule.switchport
+            msg.idle_timeout = rule.idle_timeout
+            msg.hard_timeout = rule.hard_timeout
+            if (rule.action ==  "DST_TO_HNP"):
+              msg.actions.append(of.ofp_action_nw_addr.set_dst(IPAddr("10.0.0.2")))
+              msg.actions.append(of.ofp_action_output(port = dpid))
+        #    core.openflow.getConnection(dpid).send(msg)
+            event.connection.send(msg)
+          #`  print msg.__dict__
+
       elif self.arp_for_unknowns:
         # We don't know this destination.
         # First, we track this buffer so that we can try to resend it later
@@ -277,7 +361,7 @@ class l3_switch (EventMixin):
               if self.arpTable[dpid][a.protosrc] != (inport, packet.src):
                 log.info("%i %i RE-learned %s", dpid,inport,str(a.protosrc))
             else:
-              log.debug("%i %i learned %s", dpid,inport,str(a.protosrc))
+              log.info("%i %i learned hey %s", dpid,inport,str(a.protosrc))
             self.arpTable[dpid][a.protosrc] = Entry(inport, packet.src)
 
             # Send any waiting packets...
@@ -305,7 +389,7 @@ class l3_switch (EventMixin):
                   e = ethernet(type=packet.type, src=dpid_to_mac(dpid),
                                dst=a.hwsrc)
                   e.set_payload(r)
-                  log.debug("%i %i answering ARP for %s" % (dpid, inport,
+                  log.info("%i %i answering ARP for %s" % (dpid, inport,
                    str(r.protosrc)))
                   msg = of.ofp_packet_out()
                   msg.data = e.pack()
@@ -324,6 +408,22 @@ class l3_switch (EventMixin):
           action = of.ofp_action_output(port = of.OFPP_FLOOD))
       event.connection.send(msg)
 
+	# When we get flow stats, print stuff out
+  def handle_flow_stats (self, event):
+    web_bytes = 0
+    web_flows = 0
+    for f in event.stats:
+      if f.match.tp_dst == 80 or f.match.tp_src == 80:
+       web_bytes += f.byte_count
+       web_flows += 1
+       print ("Web traffic: %s bytes over %s flows", web_bytes, web_flows)
+ 
+     # Listen for flow stats
+       core.openflow.addListenerByName("FlowStatsReceived", handle_flow_stats)
+ 
+# Now actually request flow stats from all switches
+    for con in core.openflow.connections: # make this _connections.keys() for pre-betta
+      con.send(of.ofp_stats_request(body=of.ofp_flow_stats_request()))
 
 def launch (fakeways="", arp_for_unknowns=None):
   fakeways = fakeways.replace(","," ").split()
@@ -333,5 +433,4 @@ def launch (fakeways="", arp_for_unknowns=None):
   else:
     arp_for_unknowns = str_to_bool(arp_for_unknowns)
   core.registerNew(l3_switch, fakeways, arp_for_unknowns)
-
 

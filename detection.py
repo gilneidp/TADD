@@ -23,14 +23,12 @@ timeisnow=datetime.datetime.now() - timedelta(minutes=1)
 tempfs = TemporaryFlows.objects.values ('switchport','ip_src','ip_dst', 'dst_port').filter(timestamp__gte=timeisnow, dst_port__lt=1024).annotate(num_ports=Count('dst_port'))
 padrao =[]
 for x in tempfs:
-
   padrao.append(x['dst_port'])
 # print x['ip_src'], x['dst_port']
   portas = range(min(padrao),max(padrao))
-if len(padrao) < 5:
-  print 'Nao tem padrao'
-  print padrao 
-for c in range(0,len(padrao)-5):
-  result = list(filter(lambda n: n in padrao[c:c+5],portas))
-  if len(result) == 5:
-    print 'Tem padra0!'
+  if len(padrao) < 5:
+   print 'Nao tem padrao' 
+  for c in range(0,len(padrao)-5):
+    result = list(filter(lambda n: n in padrao[c:c+5],portas))
+    if len(result) == 5:
+      print 'Tem padrao!'
