@@ -44,16 +44,27 @@ def poxstatus(request):
     status = UsageTable.objects.filter(servername = 'POX')
     poxcpu = UsageTable.objects.filter(timestamp__gte=timeisnow, servername = 'POX_CTRL')
 #   requests = TemporaryFlows.objects.filter(timestamp|date:"h:i"__gte=timeisnow).annotate(flow_count=Count('id_temporaryflow'))
-    time5=datetime.datetime.now() - timedelta(minutes=5)
-    time4=datetime.datetime.now() - timedelta(minutes=4)
-    time3=datetime.datetime.now() - timedelta(minutes=3)
-    time2=datetime.datetime.now() - timedelta(minutes=2)
-    time1=datetime.datetime.now() - timedelta(minutes=1)
-    req1 =  TemporaryFlows.objects.filter(timestamp__gte=time1).count()
-    req2 =  TemporaryFlows.objects.filter(timestamp__gte=time2).count() - req1
-    req3 =  TemporaryFlows.objects.filter(timestamp__gte=time3).count() - (req2 +req1)
-    req4 =  TemporaryFlows.objects.filter(timestamp__gte=time4).count() - (req3 + req2 +req1)
-    req5 =  TemporaryFlows.objects.filter(timestamp__gte=time5).count() - (req4 + req3 + req2 +req1)
+    time5='5'
+    time4= '4'
+    time3= '3'
+    time2= '2'
+    time1= '1'
+    req1 =  TemporaryFlows.objects.all()
+    req2 =  TemporaryFlows.objects.all()
+    req3 =  TemporaryFlows.objects.all()
+    req4 =  TemporaryFlows.objects.all()
+    req5 =  TemporaryFlows.objects.all()
+
+#    time5=datetime.datetime.now() - timedelta(minutes=5)
+#    time4=datetime.datetime.now() - timedelta(minutes=4)
+#    time3=datetime.datetime.now() - timedelta(minutes=3)
+#    time2=datetime.datetime.now() - timedelta(minutes=2)
+#    time1=datetime.datetime.now() - timedelta(minutes=1)
+#    req1 =  TemporaryFlows.objects.filter(timestamp__gte=time1).count()
+#    req2 =  TemporaryFlows.objects.filter(timestamp__gte=time2).count() - req1
+#    req3 =  TemporaryFlows.objects.filter(timestamp__gte=time3).count() - (req2 +req1)
+#    req4 =  TemporaryFlows.objects.filter(timestamp__gte=time4).count() - (req3 + req2 +req1)
+#    req5 =  TemporaryFlows.objects.filter(timestamp__gte=time5).count() - (req4 + req3 + req2 +req1)
     return render_to_response('poxstatus.html',
 #    RequestContext(request, {'status':status, 'poxcpu':poxcpu, 'requests':requests}))
     RequestContext(request, {'status':status, 'poxcpu':poxcpu, 'req1':req1,'req2':req2,'req3':req3,'req4':req4,'req5':req5}))
