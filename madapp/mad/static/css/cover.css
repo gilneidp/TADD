@@ -19,7 +19,7 @@ a:hover {
   border: 1px solid #fff;
 }
 .btn-menu {
-    background-color: #3DD8C5; 
+    background-color: #f5faff; 
     border: none;
     color: white;
     text-align: center;
@@ -35,7 +35,7 @@ a:hover {
 html,
 body {
   height: 100%;
-  background-color: #f5faff;
+  background-color: #ffffff;
 }
 body {
   color: #fff;
