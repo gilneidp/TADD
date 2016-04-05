@@ -19,9 +19,9 @@ a:hover {
   border: 1px solid #fff;
 }
 .btn-menu {
-    background-color: #2E857A; 
+    background-color: #71a5a4; 
     border: none;
-    color: white;
+    color: red;
     text-align: center;
     text-decoration: none;
     display: inline-block;
