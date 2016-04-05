@@ -15,11 +15,11 @@ a:hover {
 .btn-default:focus {
   color: #333;
   text-shadow: none; /* Prevent inheritence from `body` */
-  background-color: #fff;
+  background-color: #4CBF99;
   border: 1px solid #fff;
 }
 .btn-menu {
-    background-color: #222f5b; 
+    background-color: #4CAF50;; 
     border: none;
     color: white;
     text-align: center;
