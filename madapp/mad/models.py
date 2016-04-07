@@ -44,9 +44,16 @@ class RuleTable(models.Model):
 
 class StatsTable(models.Model):
     stats_id = models.AutoField(db_column='Stats.id', primary_key=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    id_temporaryflow = models.ForeignKey('TemporaryFlows', db_column='id_temporaryflow')
+#    id_temporaryflow = models.ForeignKey('TemporaryFlows', db_column='id_temporaryflow')
+    id_switch=  models.ForeignKey('Switches', db_column='id_switch')
+    switchport = models.IntegerField(db_column='switchPort', blank=True, null=True)  # Field name made lowercase.
+    ip_src = models.CharField(max_length=45, blank=True, null=True)
+    ip_dst = models.CharField(max_length=45, blank=True, null=True)
+    src_port = models.IntegerField(blank=True, null=True)
+    dst_port = models.IntegerField(blank=True, null=True)
     packet_counter = models.FloatField(db_column='Packet_counter', blank=True, null=True)  # Field name made lowercase.
     byte_counter = models.FloatField(db_column='Byte_counter', blank=True, null=True)  # Field name made lowercase.
+    timestamp = models.DateTimeField()
 
     class Meta:
         managed = False
