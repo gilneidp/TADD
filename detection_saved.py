@@ -24,23 +24,20 @@ INTERVAL = 0.1
 
 
 while True:
-   fl = TemporaryFlows.objects.values('ip_src','ip_dst','dst_port').distinct(filter(dst_port__lt = 1024).annotate(num_ports = Count('dst_port'))
-   padrao = []
-   pattern = []
-   ip_sequence = []
-   for x in fl:   
+  ip
+    fl = TemporaryFlows.objects.values('ip_src','ip_dst','dst_port').filter(dst_port__lt = 1024).annotate(num_ports = Count('dst_port'))
+    padrao = []
+    pattern = []
+    for x in fl:
       padrao.append(x['dst_port'])
-   for k, g in groupby(enumerate(padrao), lambda (i, x): i-x):
+    for k, g in groupby(enumerate(padrao), lambda (i, x): i-x):
         pattern =  map(itemgetter(1), g)
         if  len(pattern) > 5:
           print 'Tem padrao!'
-          print pattern
-        else:
-          print pattern
-   flows = TemporaryFlows.objects.all()
-   for flow in flows:
+    flows = TemporaryFlows.objects.all()
+    for flow in flows:
       collectedflows =StatsTable(id_switch = flow.id_switch, switchport = flow.switchport, ip_src = flow.ip_src, ip_dst = flow.ip_dst, src_port = flow.src_port, dst_port = flow.dst_port, timestamp = timezone.now())
       collectedflows.save()
-      dl_temp = TemporaryFlows.objects.all().delete()
-   time.sleep(50)
+    dl_temp = TemporaryFlows.objects.all().delete()
+    time.sleep(20)
 
