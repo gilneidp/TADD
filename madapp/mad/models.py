@@ -36,7 +36,9 @@ class RuleTable(models.Model):
     timestamp = models.DateTimeField(blank=True, null=True)
     idle_timeout = models.IntegerField(blank=True, null=True)
     hard_timeout = models.IntegerField(blank=True, null=True)
-
+    # Inserir Regras manualmente
+    def __unicode__(self):
+ 	 return "MAC de Origem:" + str(self.mac_src) + "| MAC de Destino:" + str(self.mac_dst) +"| IP de Origem:" + self.ip_src + "| Porta de Origem:" + str(self.src_port) + "| IP de Destino:" + self.ip_dst + "| Porta de Destino:" + str(self.dst_port) + "| ACTION:" + self.action
     class Meta:
         managed = False
         db_table = 'Rule_table'
