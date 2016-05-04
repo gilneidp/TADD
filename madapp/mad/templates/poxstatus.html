@@ -1,6 +1,7 @@
 {% extends "index.html" %}
 {% load staticfiles %}
 {% block corpo %}
+<meta http-equiv="refresh" content="20">
 <head>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -103,8 +104,7 @@
   </head>
 <h2 class="page-header">Informações POX :></h2>
     <div class="col-lg-12">
-     {% for x in status %}
-       {% if x.status = 1 %}
+     {% if status = 1 %}
           <div class="alert alert-success" role="alert">O Controlador POX está ATIVO </div>
      </div>
      <div class="col-lg-6">
@@ -119,8 +119,8 @@
      <div class="col-lg-12">
        {% else %}
           <div class="alert alert-danger" role="alert">POX está INATIVO .. Verifique</div>
-       {% endif %}
-      {% endfor %}
+     {% endif %}
+      
     </div>
 {% endblock %}
 

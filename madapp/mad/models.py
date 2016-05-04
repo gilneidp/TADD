@@ -26,8 +26,8 @@ class RuleTable(models.Model):
     id_rule = models.AutoField(primary_key=True)
     id_switch = models.ForeignKey('Switches', db_column='id_switch')
     switchport = models.IntegerField(db_column='switchPort', blank=True, null=True)  # Field name made lowercase.
-    mac_src = models.CharField(max_length=45, blank=True, null=True)
-    mac_dst = models.CharField(max_length=45, blank=True, null=True)
+   # mac_src = models.CharField(max_length=45, blank=True, null=True)
+   # mac_dst = models.CharField(max_length=45, blank=True, null=True)
     ip_src = models.CharField(max_length=45)
     ip_dst = models.CharField(max_length=45)
     src_port = models.IntegerField(blank=True, null=True)
@@ -38,7 +38,7 @@ class RuleTable(models.Model):
     hard_timeout = models.IntegerField(blank=True, null=True)
     # Inserir Regras manualmente
     def __unicode__(self):
- 	 return "MAC de Origem:" + str(self.mac_src) + "| MAC de Destino:" + str(self.mac_dst) +"| IP de Origem:" + self.ip_src + "| Porta de Origem:" + str(self.src_port) + "| IP de Destino:" + self.ip_dst + "| Porta de Destino:" + str(self.dst_port) + "| ACTION:" + self.action
+ 	 return "| IP de Origem:" + self.ip_src + "| Porta de Origem:" + str(self.src_port) + "| IP de Destino:" + self.ip_dst + "| Porta de Destino:" + str(self.dst_port) + "| ACTION:" + self.action
     class Meta:
         managed = False
         db_table = 'Rule_table'
@@ -65,11 +65,25 @@ class StatsTable(models.Model):
 class Switches(models.Model):
     id_switch = models.AutoField(primary_key=True)
     name_switch = models.CharField(max_length=45)
-
+    def __unicode__(self):
+        return str(self.id_switch)
+    
     class Meta:
         managed = False
         db_table = 'Switches'
 
+class ConfigTable(models.Model):
+    id_config_table =  models.AutoField(db_column='id_config_table', primary_key=True)
+    ex_mdDeteccao = models.IntegerField(blank=True, null=True)
+    ex_mdMitigacao = models.IntegerField(blank=True, null=True)
+    block_seqPortas = models.IntegerField(blank=True, null=True)
+    block_numFluxos = models.IntegerField(blank=True, null=True)
+    def __unicode__(self):
+        return "|Executar Md. Deteccao cada: " + str(self.ex_mdDeteccao) + " Segundos" + "| Executar Md. Mitigacao cada: " + str(self.ex_mdMitigacao) + " Segundos" + "| Bloquear apos: " + str(self.block_seqPortas) + " Portas Sequenciais" + "| Bloqueas apos: " + str(self.block_numFluxos) + " Fluxos"
+
+    class Meta:
+        managed = False
+        db_table = 'Config_table'
 
 class TemporaryFlows(models.Model):
     id_temporaryflow = models.AutoField(db_column='id_temporaryFlow', primary_key=True)  # Field name made lowercase.

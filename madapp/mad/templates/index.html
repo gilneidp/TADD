@@ -2,9 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+<!--    meta http-equiv="refresh" content="4" -->
 		{% block head %}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MAD- Monitoring Attacks and Deffending</title>
     <!-- Bootstrap -->
@@ -14,13 +13,15 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		{% endblock %}
+
    </head>
    <body>
 	<div class="container main-content">
 	<div class="row">
 	    <div class="col-md-12">
 	       <ul id="menu" class="btn-default nav navbar-nav navbar-right" role="navigation">
-               <li class="active"><a href="/poxstatus/"><img src="{% static "img/home.png" %}">  Início </a></li>
+               <li class="active">
+               <a href="/home/"><img src="{% static "img/home.png" %}">  Início </a></li>
                </li>
                <li class="">
                <a href="/admin/"><img src="{% static "img/config.png" %}">  Config </a>
@@ -49,9 +50,61 @@
 	     </ul>
 		 {% endblock %}
    	</div>
-	<div class="col-md-8"> 
+        <div class="col-md-8">
 	{% block corpo %}
-	 
+         <meta http-equiv="refresh" content="3">
+         <form role="form" method="GET" action="">
+         <h2 class="page-header">Iniciar/Parar Serviços</h2>
+         <div class="table-responsive">
+          <div class="form-group" input type="hidden">
+          {% if status == 0 %}
+          <select name="opt_switch" class="hidden">
+	  <option value="1">1</option>
+          </select>
+          </select>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-info" name="btnRequisicao" value="Iniciar POX" />
+        </div>
+         {% else %}
+          <select name="opt_switch" class="hidden">
+          <option value="0">0</option>
+          </select>
+          </select>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-danger" name="btnRequisicao" value="Parar POX" />
+        </div>
+        {% endif%}
+</form> 
+        
+         <form role="form2" method="GET" action="">
+         <div class="table-responsive">
+          <div class="form-group2" input type="hidden">
+          {% if status_detection == 0 %}
+          <select name="opt_detection" class="hidden">
+          <option value="1">1</option>
+          </select>
+          </select>
+        </div>
+        <div class="form-group2">
+            <input type="submit" class="btn btn-info" name="btnRequisicao2" value="Iniciar Md. Detecção" />
+        </div>
+         {% else %}
+          <select name="opt_detection" class="hidden">
+          <option value="0">0</option>
+          </select>
+          </select>
+        </div>
+        <div class="form-group2">
+            <input type="submit" class="btn btn-danger" name="btnRequisicao" value="Parar Md. Detecção"/>
+        </div>
+        {% endif%}
+</form>
+
+
+        {{ aqui }}
+ 
 	{% endblock %}
     </div>		
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

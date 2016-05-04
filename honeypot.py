@@ -17,13 +17,13 @@ import socket
 
 def GetPorts():
         motd = '$root# Welcome to the SDN Manager'
-        host = '10.0.0.2'
+        host = '127.0.0.1'
 #       port = [i for i in xrange(1024, 2048)]
         port = 6633
         return (host, port,  motd)
          
 def writeLog(client, data=''):
-        separator = '='*80
+        separator = '='*75
         fopen = open('./honeypot.log', 'a')
         fopen.write('Time: %s\nIP: %s\nPort: %d\nData: %s\n%s\n\n'%(time.ctime(), client[0], client[1], data, separator))
         fopen.close()
@@ -54,16 +54,9 @@ if __name__=='__main__':
                 stuff = GetPorts()
                 main(stuff[0], stuff[1], stuff[2])
         except KeyboardInterrupt:
-                poxstats = UsageTable.objects.get(servername = 'HPN')
-                poxstats.status = 0
-                poxstats.save()
                 print 'Bye!'
                 exit(0)
         except BaseException, e:
-                poxstats = UsageTable.objects.get(servername = 'HPN')
-                poxstats.status = 0
-                poxstats.save()
-
                 print 'Error: %s' % (e)
                 exit(1)
                                                           
