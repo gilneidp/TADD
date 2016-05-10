@@ -20,22 +20,28 @@ from django.core import serializers
 def index(request):
     dtc_status = 9
     pox_status = 9
+    mtd_status = 9
     script_pox = os.path.basename(__file__)
     script_detection = os.path.basename(__file__)
     l = commands.getstatusoutput("ps aux | grep -e '%s' | grep -v grep | awk '{print $2}'" % "pox.py")
     s = commands.getstatusoutput("ps aux | grep -e '%s' | grep -v grep | awk '{print $2}'" % "detection.py")
+    r = commands.getstatusoutput("ps aux | grep -e '%s' | grep -v grep | awk '{print $2}'" % "mitigation.py")
     if l[1]:
-            #sys.exit(0);
             pox_status = 1
     else:
             pox_status = 0
     if s[1]:
-            #sys.exit(0);
             dtc_status = 1
     else:
             dtc_status = 0
+    if r[1]:
+            mtd_status = 1
+    else:
+            mtd_status = 0
+
     status = pox_status
     status_detection = dtc_status
+    status_mitigation = mtd_status
 
     if (request.GET.get('opt_switch')): slc_switch = int(request.GET.get('opt_switch'))
     else: slc_switch = '1000'
@@ -51,12 +57,20 @@ def index(request):
     else: opt_detection = '1000'
     if ((opt_detection == 0) and (status_detection == 1)):
        r = commands.getstatusoutput("pkill -f detection.py")
-       aqui = 9
     elif ((opt_detection == 1) and (status_detection == 0)):
        run_pox = os.path.basename(__file__)
        os.system("python detection.py &")
+
+    if (request.GET.get('opt_mitigation')): opt_mitigation = int(request.GET.get('opt_mitigation'))
+    else: opt_mitigation = '1000'
+    if ((opt_mitigation == 0) and (status_mitigation == 1)):
+       r = commands.getstatusoutput("pkill -f mitigation.py")
+    elif ((opt_mitigation == 1) and (status_mitigation == 0)):
+       run_pox = os.path.basename(__file__)
+       os.system("python mitigation.py &")
+
     return render_to_response('index.html',
-    RequestContext(request, {'status':status, 'status_detection':status_detection}))
+    RequestContext(request, {'status':status, 'status_detection':status_detection, 'status_mitigation':status_mitigation}))
 def poxlogs(request):
     data_file = open('pox.log', 'r') #
     lista_logs = data_file.readlines()

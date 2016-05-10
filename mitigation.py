@@ -31,10 +31,10 @@ while True:
   ID_ATUAL = max_id['id_rule__max']
   for rule in rules:
       if rule.action == 'DROP':
-         os.system("sudo Ovs-ofctl add-flow " + rule.id_switch.name_switch + " ip_src=" + rule.ip_src + 
+         os.system("sudo ovs-ofctl add-flow " + rule.id_switch.name_switch + " ip_src=" + rule.ip_src + 
                    ",ip_dst=" + rule.ip_dst +",priority=65535,actions=drop")
       else:
-         os.system("sudo Ovs-ofctl add-flow " + rule.id_switch.name_switch + " in_port=" + rule.switch_port + 
+         os.system("sudo ovs-ofctl add-flow " + rule.id_switch.name_switch + " in_port=" + rule.switch_port + 
                    ",ip_src=" + rule.ip_src + ",ip_dst=" + rule.ip_dst + ",Tp_dst="+ rule.dst_port+",priority=65534,actions=Mod_nw_dst:10.0.0.1")
 #  max_id = RuleTable.objects.values('id_rule').aggregate(Max('id_rule'))
 #  ID_ATUAL = max_id['id_rule__max']

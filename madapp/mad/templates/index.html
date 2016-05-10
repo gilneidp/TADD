@@ -80,14 +80,14 @@
         
          <form role="form2" method="GET" action="">
          <div class="table-responsive">
-          <div class="form-group2" input type="hidden">
+          <div class="form-group" input type="hidden">
           {% if status_detection == 0 %}
           <select name="opt_detection" class="hidden">
           <option value="1">1</option>
           </select>
           </select>
         </div>
-        <div class="form-group2">
+        <div class="form-group">
             <input type="submit" class="btn btn-info" name="btnRequisicao2" value="Iniciar Md. Detecção" />
         </div>
          {% else %}
@@ -96,14 +96,38 @@
           </select>
           </select>
         </div>
-        <div class="form-group2">
+        <div class="form-group">
             <input type="submit" class="btn btn-danger" name="btnRequisicao" value="Parar Md. Detecção"/>
+        </div>
+        {% endif%}
+</form>
+         
+	 <form role="form3" method="GET" action="">
+         <div class="table-responsive">
+          <div class="form-group3" input type="hidden">
+          {% if status_mitigation == 0 %}
+          <select name="opt_mitigation" class="hidden">
+          <option value="1">1</option>
+          </select>
+          </select>
+        </div>
+        <div class="form-group3">
+            <input type="submit" class="btn btn-info" name="btnRequisicao3" value="Iniciar Md. Mitigação" />
+        </div>
+         {% else %}
+          <select name="opt_mitigation" class="hidden">
+          <option value="0">0</option>
+          </select>
+          </select>
+        </div>
+        <div class="form-group3">
+            <input type="submit" class="btn btn-danger" name="btnRequisicao" value="Parar Md. Mitigação"/>
         </div>
         {% endif%}
 </form>
 
 
-        {{ aqui }}
+
  
 	{% endblock %}
     </div>		
