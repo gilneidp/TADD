@@ -132,8 +132,9 @@ def handle_FEATURES_REPLY (con, msg):
     else:
       con.info("connected")
       con.connect_time = time.time()
+      swtname = str(con.dpid)
       # -- gilnei -- INSERCAO DOS SWITCHES NO BANCO DE DADOS
-      swt = Switches.objects.get_or_create(name_switch = con.dpid)
+      swt = Switches.objects.get_or_create(name_switch = 's'+swtname)
       e = con.ofnexus.raiseEventNoErrors(ConnectionUp, con, msg)
       if e is None or e.halt != True:
         con.raiseEventNoErrors(ConnectionUp, con, msg)

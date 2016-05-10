@@ -67,10 +67,7 @@ def poxlogs(request):
     return render_to_response('poxlogs.html',
     RequestContext(request, {'data':data}))
 def tempflows(request):
-#    timeisnow=datetime.datetime.now() - timedelta(minutes=1)
-#    tempf = TemporaryFlows.objects.values ('id_switch','switchport','ip_src','ip_dst', 'dst_port').filter(timestamp__gte=timeisnow).annotate(num_ports=Count('dst_port'))
-    tempf = TemporaryFlows.objects.values ('id_switch','switchport','ip_src','ip_dst', 'dst_port')
-
+    tempf = TemporaryFlows.objects.values ('id_switch','switchport','ip_src','ip_dst', 'dst_port').annotate(num_ports=Count('dst_port'))
     return render_to_response('tempflows.html',
     RequestContext(request, {'tempf':tempf}))
 def installedflows(request):
@@ -78,9 +75,9 @@ def installedflows(request):
     if (request.GET.get('opt_switch')): slc_switch = int(request.GET.get('opt_switch'))
     else: slc_switch = '1000' 
     if ((slc_switch != 0) and (slc_switch != None)):
-        flows = TemporaryFlows.objects.all().order_by('id_temporaryflow').filter(id_switch=slc_switch)
+        flows = StatsTable.objects.all().order_by('stats_id').filter(id_switch=slc_switch)
     else:
-       flows = TemporaryFlows.objects.all().order_by('id_temporaryflow').reverse()
+       flows = StatsTable.objects.all().order_by('stats_id').reverse()
     return render_to_response('installedflows.html',RequestContext(request,{'flows':flows, 'switches':switches}))
 
 def poxstatus(request):
@@ -139,11 +136,20 @@ def honeypotstatus(request):
 def about(request):
     return render_to_response('about.html', context_instance=RequestContext(request))
 def rules(request):
-    rules = RuleTable.objects.all().order_by('id_rule').reverse()
-    for rule in rules:
-      if (rule.action == '0'):
-	rule.action = 'DROP'
-      else:
-	rule.action = 'DST_TO_HONEYPOT'
-    return render_to_response('rules.html',
-    RequestContext(request, {'rules':rules}))
+    switches=Switches.objects.all()
+    if (request.GET.get('opt_switch')): slc_switch = int(request.GET.get('opt_switch'))
+    else: slc_switch = '1000'
+    if ((slc_switch != 0) and (slc_switch != None)):
+        rules = RuleTable.objects.all().order_by('id_rule').filter(id_switch=slc_switch).reverse()
+    else:
+        rules = RuleTable.objects.all().order_by('id_rule').reverse()
+    return render_to_response('rules.html',RequestContext(request,{'rules':rules, 'switches':switches}))
+
+#    rules = RuleTable.objects.all().order_by('id_rule').reverse()
+#    for rule in rules:
+#      if (rule.action == '0'):
+#	rule.action = 'DROP'
+#      else:
+#	rule.action = 'DST_TO_HONEYPOT'
+#   return render_to_response('rules.html',
+#   RequestContext(request, {'rules':rules}))

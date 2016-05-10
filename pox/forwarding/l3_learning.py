@@ -193,7 +193,7 @@ class l3_switch (EventMixin):
       sport = packet.next.next.srcport
       dport = packet.next.next.dstport
       log.info ("AQUI DPID %i src_port %i dst_port %i" , dpid, sport, dport)
-      switches = Switches.objects.get(name_switch = dpid)
+      switches = Switches.objects.get(name_switch = 's'+str(dpid))
       fl = TemporaryFlows(id_switch = switches, switchport = inport, ip_src = packet.next.srcip, ip_dst = packet.next.dstip, src_port = sport, dst_port = dport)
       fl.save()
 

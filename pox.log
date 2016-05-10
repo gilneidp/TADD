@@ -1,40 +1,15 @@
 INFO:core:POX 0.2.0 (carp) is up.
 INFO:openflow.of_01:[00-00-00-00-00-05 1] connected
-INFO:openflow.of_01:[00-00-00-00-00-04 2] connected
-INFO:openflow.of_01:[00-00-00-00-00-01 7] connected
-INFO:openflow.of_01:[00-00-00-00-00-02 5] connected
-INFO:openflow.of_01:[00-00-00-00-00-07 4] connected
-INFO:openflow.of_01:[00-00-00-00-00-03 3] connected
-INFO:openflow.of_01:[00-00-00-00-00-06 6] connected
-INFO:openflow.of_01:[None 8] closed
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 33470 dst_port 80
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 80 dst_port 33470
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 36316 dst_port 81
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 81 dst_port 36316
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 45288 dst_port 83
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 83 dst_port 45288
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 60017 dst_port 84
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 84 dst_port 60017
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 36290 dst_port 85
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 85 dst_port 36290
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 36291 dst_port 85
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 85 dst_port 36291
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 36292 dst_port 85
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 85 dst_port 36292
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 36293 dst_port 85
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 85 dst_port 36293
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 56360 dst_port 86
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 86 dst_port 56360
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 56361 dst_port 86
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 86 dst_port 56361
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 54135 dst_port 87
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 87 dst_port 54135
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 40835 dst_port 88
-INFO:forwarding.l3_learning:AQUI DPID 3 src_port 88 dst_port 40835
+INFO:openflow.of_01:[00-00-00-00-00-03 5] connected
+INFO:openflow.of_01:[00-00-00-00-00-02 2] connected
+INFO:openflow.of_01:[00-00-00-00-00-01 3] connected
+INFO:openflow.of_01:[00-00-00-00-00-04 4] connected
+INFO:openflow.of_01:[00-00-00-00-00-06 7] connected
+INFO:openflow.of_01:[00-00-00-00-00-07 6] connected
 INFO:openflow.of_01:[00-00-00-00-00-05 1] closed
-INFO:openflow.of_01:[00-00-00-00-00-04 2] closed
-INFO:openflow.of_01:[00-00-00-00-00-03 3] closed
-INFO:openflow.of_01:[00-00-00-00-00-07 4] closed
-INFO:openflow.of_01:[00-00-00-00-00-02 5] closed
-INFO:openflow.of_01:[00-00-00-00-00-06 6] closed
-INFO:openflow.of_01:[00-00-00-00-00-01 7] closed
+INFO:openflow.of_01:[00-00-00-00-00-02 2] closed
+INFO:openflow.of_01:[00-00-00-00-00-01 3] closed
+INFO:openflow.of_01:[00-00-00-00-00-04 4] closed
+INFO:openflow.of_01:[00-00-00-00-00-03 5] closed
+INFO:openflow.of_01:[00-00-00-00-00-07 6] closed
+INFO:openflow.of_01:[00-00-00-00-00-06 7] closed

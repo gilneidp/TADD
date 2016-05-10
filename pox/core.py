@@ -338,9 +338,9 @@ class POXCore (EventMixin):
   def goUp (self):
     log.debug(self.version_string + " going up...")
     # -- gilnei -- Atualiza Status
-    poxstats = UsageTable.objects.get(servername = 'POX')
-    poxstats.status = 1
-    poxstats.save()
+#   poxstats = UsageTable.objects.get(servername = 'POX')
+#   poxstats.status = 1
+#   poxstats.save()
     log.debug("Running on " + self._get_python_version())
     log.debug("Platform is " + self._get_platform_info())
     try:
