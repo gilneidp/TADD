@@ -17,7 +17,7 @@ import socket
 
 def GetPorts():
         motd = '$root# Welcome to the SDN Manager'
-        host = '127.0.0.1'
+        host = '10.0.0.1'
 #       port = [i for i in xrange(1024, 2048)]
         port = 6633
         return (host, port,  motd)

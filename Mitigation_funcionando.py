@@ -29,26 +29,20 @@ while True:
 #  rules = RuleTable.objects.all().filter(id_rule__gt = ID_ATUAL)
   rules = RuleTable.objects.all()
   swt = Switches.objects.all()
-  sw = []
   max_id = RuleTable.objects.values('id_rule').aggregate(Max('id_rule'))
   ID_ATUAL = max_id['id_rule__max']
   for rule in rules:
-#     if rule.id_switch.name_switch not in swt:
-#        sw.append(str(rule.id_switch.name_switch))
       if rule.action == 'DROP':
          os.system("sudo ovs-ofctl add-flow " + rule.id_switch.name_switch + " dl_type=0x0800,ip_src=" + rule.ip_src + 
                    ",ip_dst=" + rule.ip_dst + ",priority=65535,actions=drop")
       else:
-      #  if rule.id_switch.name_switch not in swt:
-      #     sw.append(str(rule.id_switch.name_switch))
-        for i in swt:    
-       	    os.system("sudo ovs-ofctl add-flow " + i.name_switch + " dl_type=0x0800,ip_src=" + rule.ip_src + ",ip_dst=" + rule.ip_dst + ",priority=65534,actions=mod_nw_dst:10.0.0.1,output:all")
-#  os.system("sudo ovs-ofctl add-flow " + rule.id_switch.name_switch + " dl_type=0x0800,ip_dst=10.0.0.1,ip_src=" + rule.ip_src +",priority=65534,action=output:all")
-  
-            os.system("sudo ovs-ofctl add-flow " + i.name_switch + " dl_type=0x0800,ip_src=10.0.0.1,ip_dst=" + rule.ip_src +",actions=mod_nw_src:"+rule.ip_dst+",output:all")
-      # for i in sw:
-       #        os.system("sudo ovs-ofctl add-flow " + i + " dl_type=0x0800,ip_src=" + rule.ip_src + ",ip_dst=10.0.0.1,actions=output:all")
-       #        os.system("sudo ovs-ofctl add-flow " + i + " dl_type=0x0800,ip_src=" + rule.ip_dst + ",ip_dst=" + rule.ip_src +",actions=output:all")
+         for i in swt:    
+        	 os.system("sudo ovs-ofctl add-flow " + rule.id_switch.name_switch + " dl_type=0x0800,in_port="+str(rule.switchport)+",ip_src=" + rule.ip_src + ",ip_dst=" + rule.ip_dst + ",priority=65534,actions=mod_nw_dst:10.0.0.1,output:all")
+        	 os.system("sudo ovs-ofctl add-flow " + rule.id_switch.name_switch + " dl_type=0x0800,ip_src=10.0.0.1,ip_dst=" + rule.ip_src +",actions=mod_nw_src:"+rule.ip_dst+",output:all")
+#		 os.system("sudo ovs-ofctl add-flow " + rule.id_switch.name_switch + " dl_type=0x0800,ip_src=10.0.0.1,ip_dst=" + rule.ip_src + ",out_port=" + str(rule.switchport) + ",priority=65534,actions=mod_nw_src:"+rule.ip_dst+",output:all")
+#                   ",ip_src=" + rule.ip_src + ",ip_dst=" + rule.ip_dst + ",Tp_dst="+ rule.dst_port + ",priority=65534,actions=Mod_nw_dst:10.0.0.1")
+#  max_id = RuleTable.objects.values('id_rule').aggregate(Max('id_rule'))
+#  ID_ATUAL = max_id['id_rule__max']
       hs_rules=HsTable(id_switch=rule.id_switch, switchport = rule.switchport, ip_src = rule.ip_src,
              ip_dst = rule.ip_dst, dst_port = rule.dst_port, idle_time=rule.idle_timeout, hard_time=rule.hard_timeout, 
 	     action=rule.action, timestamp=timezone.now())

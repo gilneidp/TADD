@@ -59,7 +59,7 @@ def index(request):
        r = commands.getstatusoutput("pkill -f detection.py")
     elif ((opt_detection == 1) and (status_detection == 0)):
        run_pox = os.path.basename(__file__)
-       os.system("python detection.py &")
+       os.system("sudo python detection.py &")
 
     if (request.GET.get('opt_mitigation')): opt_mitigation = int(request.GET.get('opt_mitigation'))
     else: opt_mitigation = '1000'
@@ -67,7 +67,7 @@ def index(request):
        r = commands.getstatusoutput("pkill -f mitigation.py")
     elif ((opt_mitigation == 1) and (status_mitigation == 0)):
        run_pox = os.path.basename(__file__)
-       os.system("python mitigation.py &")
+       os.system("sudo python mitigation.py &")
 
     return render_to_response('index.html',
     RequestContext(request, {'status':status, 'status_detection':status_detection, 'status_mitigation':status_mitigation}))
@@ -81,11 +81,12 @@ def poxlogs(request):
     return render_to_response('poxlogs.html',
     RequestContext(request, {'data':data}))
 def tempflows(request):
-    tempf = TemporaryFlows.objects.values ('id_switch','switchport','ip_src','ip_dst', 'dst_port').annotate(num_ports=Count('dst_port'))
+#    tempf = TemporaryFlows.objects.values ('id_switch','switchport','ip_src','ip_dst', 'dst_port').annotate(num_ports=Count('dst_port'))
+    tempf = TemporaryFlows.objects.all()
     return render_to_response('tempflows.html',
     RequestContext(request, {'tempf':tempf}))
 def installedflows(request):
-    switches=Switches.objects.all()
+    switches=Switches.objects.all().order_by('name_switch')
     if (request.GET.get('opt_switch')): slc_switch = int(request.GET.get('opt_switch'))
     else: slc_switch = '1000' 
     if ((slc_switch != 0) and (slc_switch != None)):
@@ -150,13 +151,13 @@ def honeypotstatus(request):
 def about(request):
     return render_to_response('about.html', context_instance=RequestContext(request))
 def rules(request):
-    switches=Switches.objects.all()
+    switches=Switches.objects.all().order_by('name_switch')
     if (request.GET.get('opt_switch')): slc_switch = int(request.GET.get('opt_switch'))
     else: slc_switch = '1000'
     if ((slc_switch != 0) and (slc_switch != None)):
-        rules = RuleTable.objects.all().order_by('id_rule').filter(id_switch=slc_switch).reverse()
+        rules = HsTable.objects.all().order_by('id_rule').filter(id_switch=slc_switch).reverse()
     else:
-        rules = RuleTable.objects.all().order_by('id_rule').reverse()
+        rules = HsTable.objects.all().order_by('id_rule').reverse()
     return render_to_response('rules.html',RequestContext(request,{'rules':rules, 'switches':switches}))
 
 #    rules = RuleTable.objects.all().order_by('id_rule').reverse()

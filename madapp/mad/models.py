@@ -40,9 +40,33 @@ class RuleTable(models.Model):
     def __unicode__(self):
  	 return "| IP de Origem:" + self.ip_src + "| Porta de Origem:" + str(self.src_port) + "| IP de Destino:" + self.ip_dst + "| Porta de Destino:" + str(self.dst_port) + "| ACTION:" + self.action
     class Meta:
+        verbose_name = 'Tabela de Regra'
+        verbose_name_plural = 'Tabela de Regras'
         managed = False
         db_table = 'Rule_table'
 
+class HsTable(models.Model):
+    id_rule = models.AutoField(primary_key=True)
+    id_switch = models.ForeignKey('Switches', db_column='id_switch')
+    switchport = models.IntegerField(db_column='switchPort', blank=True, null=True)  # Field name made lowercase.
+   # mac_src = models.CharField(max_length=45, blank=True, null=True)
+   # mac_dst = models.CharField(max_length=45, blank=True, null=True)
+    ip_src = models.CharField(max_length=45)
+    ip_dst = models.CharField(max_length=45)
+    src_port = models.IntegerField(blank=True, null=True)
+    dst_port = models.IntegerField(blank=True, null=True)
+    action = models.CharField(max_length=45, blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    idle_time = models.IntegerField(blank=True, null=True)
+    hard_time = models.IntegerField(blank=True, null=True)
+    # Inserir Regras manualmente
+    def __unicode__(self):
+         return "| IP de Origem:" + self.ip_src + "| Porta de Origem:" + str(self.src_port) + "| IP de Destino:" + self.ip_dst + "| Porta de Destino:" + str(self.dst_port) + "| ACTION:" + self.action
+    class Meta:
+        verbose_name = 'Tabela de Regra'
+        verbose_name_plural = 'Registro de Regras'
+        managed = False
+        db_table = 'Hs_table'
 
 class StatsTable(models.Model):
     stats_id = models.AutoField(db_column='Stats.id', primary_key=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
@@ -74,14 +98,16 @@ class Switches(models.Model):
 
 class ConfigTable(models.Model):
     id_config_table =  models.AutoField(db_column='id_config_table', primary_key=True)
-    ex_mdDeteccao = models.IntegerField(blank=True, null=True)
-    ex_mdMitigacao = models.IntegerField(blank=True, null=True)
-    block_seqPortas = models.IntegerField(blank=True, null=True)
-    block_numFluxos = models.IntegerField(blank=True, null=True)
+    ex_mdDeteccao = models.IntegerField(blank=True, null=True, verbose_name="Ex. Modulo Deteccao cada (s)")
+    ex_mdMitigacao = models.IntegerField(blank=True, null=True, verbose_name="Ex. Modulo Mitigacao cada (s)")
+    block_seqPortas = models.IntegerField(blank=True, null=True,  verbose_name="Define requisicoes seq. para bloqueio")
+    block_numFluxos = models.IntegerField(blank=True, null=True,  verbose_name="Numero de tentativas por porta para bloqueio")
     def __unicode__(self):
         return "|Executar Md. Deteccao cada: " + str(self.ex_mdDeteccao) + " Segundos" + "| Executar Md. Mitigacao cada: " + str(self.ex_mdMitigacao) + " Segundos" + "| Bloquear apos: " + str(self.block_seqPortas) + " Portas Sequenciais" + "| Bloqueas apos: " + str(self.block_numFluxos) + " Fluxos"
 
     class Meta:
+        verbose_name = 'Configurar Modulos'
+        verbose_name_plural = 'Configurar Modulos'
         managed = False
         db_table = 'Config_table'
 

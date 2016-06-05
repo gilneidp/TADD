@@ -77,6 +77,11 @@ while True:
          switches = Switches.objects.get(id_switch =flow['id_switch'])
          rt = RuleTable.objects.get_or_create(id_switch=switches, switchport = flow['switchport'], ip_src = flow['ip_src'],
              ip_dst = flow['ip_dst'], dst_port = flow['dst_port'], idle_timeout=3000, hard_timeout=20000, action='DST_HONEYPOT')
+#         hr = HistoricoRules(id_switch=switch, ip_src = ip_flow,
+#             ip_dst = f['ip_dst'], idle_timeout=3000, hard_timeout=20000, action='DST_HONEYPOT',timestamp=timezone.now())
+
+#         hr.save()
+
 #         rt.save()
      else:
       	 attack = 0
@@ -102,9 +107,11 @@ while True:
         switch = Switches.objects.get(id_switch =flow['id_switch'])
         rule = RuleTable.objects.get_or_create(id_switch=switch, ip_src = ip_flow,
              ip_dst = f['ip_dst'], idle_timeout=3000, hard_timeout=20000, action='DROP')
-#         rt.save()
-         
-        print ip_atacante 
+#        rt = HistoricoRules(id_switch=switch, ip_src = ip_flow,
+#             ip_dst = f['ip_dst'], idle_timeout=3000, hard_timeout=20000, action='DROP',timestamp=timezone.now())
+
+#        rt.save()
+#        print ip_atacante 
 #        print 'ATENCAO ATAQUE ADVINDO DOS IPS %s', ip_atacante
       else:
         print 'Nao ha ataques md._01'
@@ -124,6 +131,7 @@ while True:
 #               tst == 0
 #  swt_port_atacante 
 #ARMAZENA REGRAS NA TABELA DEFINITIVA E LIMPA TABELA TEMPORARIA
+  rls = RuleTable.objects.all().filter(ip_dst='10.0.0.1',action='DST_HONEYPOT').delete()
   fl = TemporaryFlows.objects.all()
   for flow in fl:
       collectedflows =StatsTable(id_switch = flow.id_switch, switchport = flow.switchport, ip_src = flow.ip_src, ip_dst = flow.ip_dst, src_port = flow.src_port, dst_port = flow.dst_port, timestamp = timezone.now())
