@@ -19,15 +19,13 @@ class FlowTableHasStatsTable(models.Model):
     class Meta:
         managed = False
         db_table = 'Flow_table_has_Stats_table'
-      # unique_together = (('Flow_table_Flow.id', 'Stats_table_Stats.id'),)
+      
 
 
 class RuleTable(models.Model):
     id_rule = models.AutoField(primary_key=True)
     id_switch = models.ForeignKey('Switches', db_column='id_switch', verbose_name="Nome do Switch")
     switchport = models.IntegerField(db_column='switchPort', blank=True, null=True, verbose_name="Porta do Switch")  # Field name made lowercase.
-   # mac_src = models.CharField(max_length=45, blank=True, null=True)
-   # mac_dst = models.CharField(max_length=45, blank=True, null=True)
     ip_src = models.CharField(max_length=45, verbose_name="IP de Origem")
     ip_dst = models.CharField(max_length=45, verbose_name="IP de Destino")
     src_port = models.IntegerField(blank=True, null=True, verbose_name="Porta de Origem")
@@ -49,8 +47,6 @@ class HsTable(models.Model):
     id_rule = models.AutoField(primary_key=True)
     id_switch = models.ForeignKey('Switches', db_column='id_switch')
     switchport = models.IntegerField(db_column='switchPort', blank=True, null=True)  # Field name made lowercase.
-   # mac_src = models.CharField(max_length=45, blank=True, null=True)
-   # mac_dst = models.CharField(max_length=45, blank=True, null=True)
     ip_src = models.CharField(max_length=45)
     ip_dst = models.CharField(max_length=45)
     src_port = models.IntegerField(blank=True, null=True)
@@ -69,8 +65,7 @@ class HsTable(models.Model):
         db_table = 'Hs_table'
 
 class StatsTable(models.Model):
-    stats_id = models.AutoField(db_column='Stats.id', primary_key=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-#    id_temporaryflow = models.ForeignKey('TemporaryFlows', db_column='id_temporaryflow')
+    stats_id = models.AutoField(db_column='Stats.id', primary_key=True)  # Field name made lowercase. 
     id_switch=  models.ForeignKey('Switches', db_column='id_switch')
     switchport = models.IntegerField(db_column='switchPort', blank=True, null=True)  # Field name made lowercase.
     ip_src = models.CharField(max_length=45, blank=True, null=True)
@@ -113,18 +108,12 @@ class ConfigTable(models.Model):
 
 class TemporaryFlows(models.Model):
     id_temporaryflow = models.AutoField(db_column='id_temporaryFlow', primary_key=True)  # Field name made lowercase.
-  # id_switch = models.ForeignKey(Switches, db_column='id_switch')
     id_switch=  models.ForeignKey('Switches', db_column='id_switch')
     switchport = models.IntegerField(db_column='switchPort', blank=True, null=True)  # Field name made lowercase.
-#    mac_src = models.CharField(max_length=45, blank=True, null=True)
-#    mac_dst = models.CharField(max_length=45, blank=True, null=True)
     ip_src = models.CharField(max_length=45, blank=True, null=True)
     ip_dst = models.CharField(max_length=45, blank=True, null=True)
     src_port = models.IntegerField(blank=True, null=True)
     dst_port = models.IntegerField(blank=True, null=True)
-#    action = models.CharField(max_length=45, blank=True, null=True)
-#    timeout_time = models.TimeField(blank=True, null=True)
-#    timestamp = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -139,7 +128,6 @@ class UsageTable(models.Model):
     input_traffic = models.FloatField(db_column='Input_traffic', blank=True, null=True)  # Field name made lowercase.
     output_traffic = models.FloatField(db_column='Output_traffic', blank=True, null=True)  # Field name made lowercase.
     timestamp =  models.DateTimeField()
-  #  timestamp = models.CharField(db_column='Timestamp', max_length=45)  # Field name made lowercase.
 
     class Meta:
         managed = False
