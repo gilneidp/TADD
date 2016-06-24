@@ -108,18 +108,6 @@ def poxstatus(request):
     status = pox_status
     timeisnow= datetime.datetime.now() - timedelta(minutes=5)
     poxcpu = UsageTable.objects.filter(timestamp__gte=timeisnow, servername = 'POX_CTRL')
-   # requests = StatsTable.objects.filter(timestamp|date:"h:i"__gte=timeisnow).annotate(flow_count=Count('id_temporaryflow'))
- #  time5='5'
- #  time4= '4'
- #  time3= '3'
- #  time2= '2'
- #  time1= '1'
- #  req1 =  TemporaryFlows.objects.all()
- #  req2 =  TemporaryFlows.objects.all()
- #  req3 =  TemporaryFlows.objects.all()
- #  req4 =  TemporaryFlows.objects.all()
- #  req5 =  TemporaryFlows.objects.all()
-
     time5=datetime.datetime.now() - timedelta(minutes=5)
     time4=datetime.datetime.now() - timedelta(minutes=4)
     time3=datetime.datetime.now() - timedelta(minutes=3)
