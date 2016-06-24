@@ -159,12 +159,3 @@ def rules(request):
     else:
         rules = HsTable.objects.all().order_by('id_rule').reverse()
     return render_to_response('rules.html',RequestContext(request,{'rules':rules, 'switches':switches}))
-
-#    rules = RuleTable.objects.all().order_by('id_rule').reverse()
-#    for rule in rules:
-#      if (rule.action == '0'):
-#	rule.action = 'DROP'
-#      else:
-#	rule.action = 'DST_TO_HONEYPOT'
-#   return render_to_response('rules.html',
-#   RequestContext(request, {'rules':rules}))
