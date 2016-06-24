@@ -24,24 +24,24 @@ class FlowTableHasStatsTable(models.Model):
 
 class RuleTable(models.Model):
     id_rule = models.AutoField(primary_key=True)
-    id_switch = models.ForeignKey('Switches', db_column='id_switch')
-    switchport = models.IntegerField(db_column='switchPort', blank=True, null=True)  # Field name made lowercase.
+    id_switch = models.ForeignKey('Switches', db_column='id_switch', verbose_name="Nome do Switch")
+    switchport = models.IntegerField(db_column='switchPort', blank=True, null=True, verbose_name="Porta do Switch")  # Field name made lowercase.
    # mac_src = models.CharField(max_length=45, blank=True, null=True)
    # mac_dst = models.CharField(max_length=45, blank=True, null=True)
-    ip_src = models.CharField(max_length=45)
-    ip_dst = models.CharField(max_length=45)
-    src_port = models.IntegerField(blank=True, null=True)
-    dst_port = models.IntegerField(blank=True, null=True)
-    action = models.CharField(max_length=45, blank=True, null=True)
+    ip_src = models.CharField(max_length=45, verbose_name="IP de Origem")
+    ip_dst = models.CharField(max_length=45, verbose_name="IP de Destino")
+    src_port = models.IntegerField(blank=True, null=True, verbose_name="Porta de Origem")
+    dst_port = models.IntegerField(blank=True, null=True, verbose_name="Porta de Destino")
+    action = models.CharField(max_length=45, blank=True, null=True, verbose_name="Action")
     timestamp = models.DateTimeField(blank=True, null=True)
     idle_timeout = models.IntegerField(blank=True, null=True)
     hard_timeout = models.IntegerField(blank=True, null=True)
     # Inserir Regras manualmente
     def __unicode__(self):
- 	 return "| IP de Origem:" + self.ip_src + "| Porta de Origem:" + str(self.src_port) + "| IP de Destino:" + self.ip_dst + "| Porta de Destino:" + str(self.dst_port) + "| ACTION:" + self.action
+ 	 return "IP de Origem:" + self.ip_src + "| Porta de Origem:" + str(self.src_port) + "| IP de Destino:" + self.ip_dst + "| Porta de Destino:" + str(self.dst_port) + "| ACTION:" + self.action
     class Meta:
-        verbose_name = 'Tabela de Regra'
-        verbose_name_plural = 'Tabela de Regras'
+        verbose_name = 'Adicionar Regra'
+        verbose_name_plural = 'Adicionar Regras'
         managed = False
         db_table = 'Rule_table'
 
@@ -90,7 +90,7 @@ class Switches(models.Model):
     id_switch = models.AutoField(primary_key=True)
     name_switch = models.CharField(max_length=45)
     def __unicode__(self):
-        return str(self.id_switch)
+        return str(self.name_switch)
     
     class Meta:
         managed = False

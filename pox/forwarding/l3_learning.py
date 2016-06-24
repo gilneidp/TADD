@@ -60,16 +60,16 @@ from pox.lib.revent import *
 import time
 
 # Timeout for flows
-FLOW_IDLE_TIMEOUT = 10
+FLOW_IDLE_TIMEOUT = 25 # 10
 
 # Timeout for ARP entries
-ARP_TIMEOUT = 60 * 2
+ARP_TIMEOUT = 60 * 3 # 60 * 3 
 
 # Maximum number of packet to buffer on a switch for an unknown IP
-MAX_BUFFERED_PER_IP = 5
+MAX_BUFFERED_PER_IP = 10 # 5
 
 # Maximum time to hang on to a buffer for an unknown IP in seconds
-MAX_BUFFER_TIME = 5
+MAX_BUFFER_TIME = 10 # 5
 
 
 class Entry (object):
@@ -192,7 +192,7 @@ class l3_switch (EventMixin):
     if isinstance(packet.next.next,tcp):
       sport = packet.next.next.srcport
       dport = packet.next.next.dstport
-      log.info ("AQUI DPID %i src_port %i dst_port %i" , dpid, sport, dport)
+      log.info ("Switch %i src_port %i dst_port %i" , dpid, sport, dport)
       switches = Switches.objects.get(name_switch = 's'+str(dpid))
       fl = TemporaryFlows(id_switch = switches, switchport = inport, ip_src = packet.next.srcip, ip_dst = packet.next.dstip, src_port = sport, dst_port = dport)
       fl.save()

@@ -3,7 +3,8 @@
 {% block corpo %}
 <meta http-equiv="refresh" content="20">
 <head>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="{% static "js/charts.js" %}"></script>
+<!--<script type="text/javascript" src="https://www.google.com/jsapi"></script>-->
     <script type="text/javascript">
       google.load('visualization', '1', {packages: ['corechart', 'line']});
       google.setOnLoadCallback(drawBackgroundColor);
@@ -68,10 +69,8 @@
 
     </script>  -->
 
-
-
-    <script type="text/javascript"
-          src="https://www.google.com/jsapi?autoload={
+	<script type="text/javascript"
+          src="{% static "js/charts1.js" %}?autoload={
             'modules':[{
               'name':'visualization',
               'version':'1',
@@ -79,6 +78,15 @@
             }]
           }"></script>
 
+<!--    <script type="text/javascript"
+          src="https://www.google.com/jsapi?autoload={ 
+            'modules':[{
+              'name':'visualization',
+              'version':'1',
+              'packages':['corechart', 'line']
+            }]
+          }"></script>
+-->
     <script type="text/javascript">
       google.setOnLoadCallback(drawChart);
       function drawChart() {

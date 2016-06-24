@@ -42,10 +42,11 @@ while True:
       #  if rule.id_switch.name_switch not in swt:
       #     sw.append(str(rule.id_switch.name_switch))
         for i in swt:    
-       	    os.system("sudo ovs-ofctl add-flow " + i.name_switch + " dl_type=0x0800,ip_src=" + rule.ip_src + ",ip_dst=" + rule.ip_dst + ",priority=65534,actions=mod_nw_dst:10.0.0.1,output:all")
+       	    os.system("sudo ovs-ofctl add-flow " + i.name_switch + " dl_type=0x0800,ip_src=" + rule.ip_src + ",ip_dst=" + rule.ip_dst + ",priority=65535,actions=mod_nw_dst:10.0.0.1,output:all")
 #  os.system("sudo ovs-ofctl add-flow " + rule.id_switch.name_switch + " dl_type=0x0800,ip_dst=10.0.0.1,ip_src=" + rule.ip_src +",priority=65534,action=output:all")
   
-            os.system("sudo ovs-ofctl add-flow " + i.name_switch + " dl_type=0x0800,ip_src=10.0.0.1,ip_dst=" + rule.ip_src +",actions=mod_nw_src:"+rule.ip_dst+",output:all")
+            os.system("sudo ovs-ofctl add-flow " + i.name_switch + " dl_type=0x0800,ip_src=10.0.0.1,ip_dst=" + rule.ip_src +",priority=65535,actions=mod_nw_src:"+rule.ip_dst+",output:all")
+#	    os.system("sudo ovs-ofctl add-flow " + i.name_switch + " dl_type=0x0800,ip_src=10.0.0.1,priority=65534,actions=output:all")
       # for i in sw:
        #        os.system("sudo ovs-ofctl add-flow " + i + " dl_type=0x0800,ip_src=" + rule.ip_src + ",ip_dst=10.0.0.1,actions=output:all")
        #        os.system("sudo ovs-ofctl add-flow " + i + " dl_type=0x0800,ip_src=" + rule.ip_dst + ",ip_dst=" + rule.ip_src +",actions=output:all")
